@@ -44,7 +44,7 @@ export async function dispatchDrawNotification(drawId: string) {
   const [{ data: participant }, { data: claim }] = await Promise.all([
     supabase
       .from("participants")
-      .select("name, email, lucky_draw_id")
+      .select("full_name, email, lucky_draw_id")
       .eq("id", draw.winner_participant_id)
       .single(),
     supabase
@@ -76,11 +76,11 @@ export async function dispatchDrawNotification(drawId: string) {
     from,
     to: participant.email,
     replyTo: process.env.WINNER_REPLY_TO,
-    subject: "You won the festival lucky draw!",
+    subject: "You won the Spotlight 2026 lucky draw!",
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#24172d">
-        <p style="font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#8a5b22">Festival Lucky Draw</p>
-        <h1 style="font-size:30px;margin:12px 0">Congratulations, ${escapeHtml(participant.name)}!</h1>
+        <p style="font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#8a5b22">Armson Homes presents CETalks Spotlight 2026</p>
+        <h1 style="font-size:30px;margin:12px 0">Congratulations, ${escapeHtml(participant.full_name)}!</h1>
         <p>Your lucky-draw ID <strong>${escapeHtml(participant.lucky_draw_id)}</strong> has been selected.</p>
         <p>Please visit the festival help desk with your lucky-draw ID, submitted phone number, and a government-issued identity document.</p>
         <p><strong>Claim before:</strong> ${escapeHtml(formatDeadline(claim.claim_deadline))}</p>

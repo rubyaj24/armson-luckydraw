@@ -24,12 +24,6 @@ export const registrationSchema = z.object({
   startedAt: z.coerce.number().int().positive(),
 });
 
-export const drawSettingsSchema = z.object({
-  nextTarget: z.coerce.number().int().positive(),
-  interval: z.coerce.number().int().min(1).max(1_000_000),
-  reason: z.string().trim().min(5, "Please provide a short reason").max(500),
-});
-
 export const reasonSchema = z.object({
   reason: z.string().trim().min(5, "Please provide a short reason").max(500),
 });

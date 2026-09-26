@@ -96,7 +96,7 @@ export function RegistrationForm({ closed, paused }: { closed: boolean; paused: 
       <div className="form-grid">
         <div className="field">
           <label htmlFor="age">Age</label>
-          <input id="age" name="age" type="number" inputMode="numeric" min={18} max={120} required placeholder="18+" />
+          <input id="age" name="age" type="number" inputMode="numeric" min={18} max={120} required placeholder="Your age" />
         </div>
         <div className="field">
           <label htmlFor="city">City</label>
@@ -121,7 +121,7 @@ export function RegistrationForm({ closed, paused }: { closed: boolean; paused: 
 
       <label className="consent-row">
         <input name="consent" type="checkbox" required />
-        <span>I confirm that I am 18 or older and agree to the <Link href="/rules">draw rules</Link> and <Link href="/privacy">privacy notice</Link>.</span>
+        <span>I confirm that my details are accurate and agree to the <Link href="/rules">draw rules</Link> and <Link href="/privacy">privacy notice</Link>.</span>
       </label>
 
       <TurnstileWidget onToken={onToken} />

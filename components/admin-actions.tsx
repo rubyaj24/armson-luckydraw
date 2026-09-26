@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { DrawRecord, EventRecord } from "@/lib/types";
 
@@ -19,7 +20,6 @@ export function EventActions({ event, eligibleCount }: { event: EventRecord; eli
   const router = useRouter();
   const [busy, setBusy] = useState("");
   const [notice, setNotice] = useState("");
-  const [showSettings, setShowSettings] = useState(false);
   const [showClose, setShowClose] = useState(false);
 
   async function execute(label: string, action: () => Promise<unknown>) {
@@ -38,13 +38,6 @@ export function EventActions({ event, eligibleCount }: { event: EventRecord; eli
     }
   }
 
-  async function manualDraw() {
-    if (!confirm(`Select one winner from ${eligibleCount} eligible participants?`)) return;
-    const reason = prompt("Reason for this manual draw:");
-    if (!reason) return;
-    await execute("Manual draw", () => post("/api/admin/draw", { reason }));
-  }
-
   async function toggleRegistration() {
     const target = event.registration_status === "open" ? "paused" : "open";
     const reason = prompt(`Reason to set registration to ${target}:`);
@@ -57,33 +50,11 @@ export function EventActions({ event, eligibleCount }: { event: EventRecord; eli
   return (
     <>
       <div className="action-row">
-        <button className="admin-button primary" onClick={manualDraw} disabled={Boolean(busy) || event.draw_status === "closed" || eligibleCount === 0}>✦ Run manual draw</button>
+        <Link className="admin-button primary" href="/admin/stage">✦ Open audience draw stage</Link>
         <button className="admin-button" onClick={toggleRegistration} disabled={Boolean(busy) || event.draw_status === "closed"}>{event.registration_status === "open" ? "Ⅱ Pause entries" : "▶ Resume entries"}</button>
-        <button className="admin-button" onClick={() => setShowSettings(true)} disabled={Boolean(busy) || event.draw_status === "closed"}>⚙ Draw settings</button>
         <button className="admin-button danger" onClick={() => setShowClose(true)} disabled={Boolean(busy) || event.draw_status === "closed"}>Close lucky draw</button>
       </div>
       {notice && <div className="admin-notice">{notice}</div>}
-
-      {showSettings && (
-        <Modal title="Automatic draw settings" onClose={() => setShowSettings(false)}>
-          <form onSubmit={(formEvent) => {
-            formEvent.preventDefault();
-            const form = new FormData(formEvent.currentTarget);
-            execute("Settings update", () => post("/api/admin/settings", {
-              nextTarget: form.get("nextTarget"), interval: form.get("interval"), reason: form.get("reason"),
-            })).then((succeeded) => { if (succeeded) setShowSettings(false); });
-          }}>
-            <p className="modal-note">The real registration count ({event.valid_registration_count}) cannot be edited. Changes affect future draws only.</p>
-            {notice && <div className="admin-notice">{notice}</div>}
-            <div className="form-grid">
-              <div className="field"><label>Next draw at</label><input name="nextTarget" type="number" min={event.valid_registration_count + 1} defaultValue={event.next_auto_draw_at} required /></div>
-              <div className="field"><label>Repeat every</label><input name="interval" type="number" min={1} defaultValue={event.auto_draw_interval} required /></div>
-            </div>
-            <div className="field"><label>Reason for change</label><textarea name="reason" rows={3} minLength={5} required /></div>
-            <button className="admin-button primary wide" disabled={Boolean(busy)}>Save settings</button>
-          </form>
-        </Modal>
-      )}
 
       {showClose && (
         <Modal title="Permanently close lucky draw" danger onClose={() => setShowClose(false)}>

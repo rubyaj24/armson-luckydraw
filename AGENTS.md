@@ -44,28 +44,23 @@ Rules:
 ## Draw rules
 
 - Select exactly one winner per draw.
-- By default, run an automatic draw at every cumulative valid-registration milestone: 100, 200, 300, and so on.
-- Allow the administrator to configure the next automatic-draw target and the repeating interval for future draws. The defaults are a next target of 100 and an interval of 100.
 - Never implement this feature by editing, inflating, or decrementing the real registration count. The cumulative valid-registration sequence is immutable.
-- Configuration changes affect only future, incomplete milestones. Completed draws and their milestone values remain immutable.
-- Require the next automatic target to be greater than the current cumulative registration sequence. If the administrator wants a draw at or below the current count, they must use the separate manual-draw action.
-- Record the old value, new value, administrator, timestamp, and required reason for every threshold or interval change.
-- Milestones are based on the permanent registration sequence, not the current eligible-participant count.
+- Run exactly two draws: one at the end of October 3 and one at the end of October 4.
+- Draws are administrator-initiated from the protected audience stage; registrations never trigger a draw automatically.
+- Give each event day a unique database constraint so a completed daily draw cannot be repeated.
+- Each draw includes every participant who is eligible when that daily draw starts.
 - Every non-winning eligible participant from the entire event remains eligible in subsequent draws.
 - A selected winner is permanently excluded from all future draws, even if the prize is later unclaimed or rejected.
-- The administrator may run a manual draw at any time when at least one eligible participant exists.
-- A manual draw does not consume, reset, postpone, or otherwise alter automatic milestones. For example, a manual draw at 75 registrations is followed by the normal automatic draw at registration 100.
 - Do not conduct replacement or redraw selections for rejected, absent, or unclaimed winners.
-- Allow the administrator to close the lucky draw permanently. Closing must atomically stop new registrations and disable both automatic and manual draws.
+- Allow the administrator to close the lucky draw permanently. Closing must atomically stop new registrations and disable both daily draws.
 - Closing the lucky draw must not cancel or rewrite completed draws, pending winner notifications, or existing claim records. The administrator must still be able to retry winner email, process claims, view history, and export data after closure.
 - Treat closure as a destructive finalization action: show the current registration count and unresolved winners, require an explicit typed confirmation and reason, and write it to the audit trail. Do not provide an ordinary dashboard action to reopen a closed draw.
 - Serialize draw closure with registration and draw transactions. If a transaction commits before closure, its registration/draw remains valid; after closure commits, subsequent registrations and draws must fail cleanly.
 - Use cryptographically secure randomness. Never use `Math.random()` or an unaudited client-side selection.
 - Draws must be atomic, idempotent, and safe under concurrent registrations and repeated requests.
-- Give every automatic milestone a unique database constraint so it cannot be drawn twice.
-- Serialize manual and automatic draw execution so they cannot collide.
+- Serialize draw execution so concurrent requests cannot select two winners for one day.
 
-Registration insertion, permanent sequence assignment, milestone detection, and any automatic draw must occur in one database transaction, preferably through a narrowly scoped Postgres function/RPC. The public response must never reveal a winner selected from the eligible pool.
+Registration insertion and permanent sequence assignment must occur in one database transaction. Daily winner selection must run through a narrowly scoped Postgres function/RPC and never rely on the client-side animation for randomness.
 
 ## Winner notification and claiming
 
@@ -87,11 +82,10 @@ The dashboard should provide:
 
 - Total valid registrations
 - Current eligible-participant count
-- Progress to the next automatic milestone
-- Automatic-draw settings showing the read-only real registration count, editable next target, and editable repeating interval
+- Status of the October 3 and October 4 draw slots
 - Registration search and filtering
 - Draw and winner history
-- Manual draw with an explicit confirmation step
+- A protected full-screen audience stage with an odometer/lottery animation and explicit confirmation
 - Winner-notification delivery status and retry
 - Claim-status management
 - Registration pause/resume and event closure controls
@@ -104,23 +98,23 @@ Do not confuse the application's draw/action audit trail with Supabase platform 
 ## Data and audit requirements
 
 - Keep events, participants, draws, winners/claims, notification attempts, and application audit records as separate concepts.
-- Scope uniqueness constraints and draw milestones to an event so future festivals can be operated independently.
+- Scope daily-draw uniqueness constraints to an event so future festivals can be operated independently.
 - Store timestamps in UTC and display them in `Asia/Kolkata`.
-- A draw record must include its event, type (`automatic` or `manual`), milestone when applicable, eligible snapshot/count, selected participant, secure random-selection evidence, creation time, and initiating actor.
+- A draw record must include its event, festival date, eligible snapshot/count, selected participant, secure random-selection evidence, creation time, and initiating actor.
 - Never silently delete or rewrite completed draw records.
-- Use database constraints in addition to application validation for age eligibility, unique normalized email/phone, winner exclusion, and automatic milestone uniqueness where practical.
+- Use database constraints in addition to application validation for age eligibility, unique normalized email/phone, winner exclusion, and daily-draw uniqueness where practical.
 - Use Row Level Security. Public clients must not be able to list participant data, invoke draws, view winners' personal information, or write directly to protected tables.
 - Collect only the agreed fields, display a plain-language privacy notice, and keep marketing consent separate if marketing collection is added later.
 
 ## Reliability and UX
 
-- Design for at least 2,000 registrations and burst traffic around milestone boundaries.
+- Design for at least 2,000 registrations and burst traffic near each day’s draw.
 - The registration experience must be mobile-first and usable on weak festival connectivity.
 - Disable submit controls while a request is in progress, but also enforce server-side idempotency because client controls are insufficient.
 - Return the registration result before attempting non-critical email work.
 - Make event state and opening hours server-controlled; do not rely on the participant's device clock.
 - Provide clear states for duplicate data, underage users, closed registration, failed Turnstile validation, temporary server failure, and successful registration.
-- Do not depend on a frequent Vercel cron job for milestone draws. A successful milestone registration must trigger its draw transactionally.
+- Do not use a Vercel cron job for daily draws. The administrator starts each finale from the protected stage.
 
 ## Hosting and service expectations
 
@@ -150,10 +144,9 @@ Add automated tests for the business-critical behavior, especially:
 - Email and phone normalization and uniqueness
 - Under-18 rejection
 - Idempotent registration submission
-- Exactly one automatic draw under concurrent milestone registrations
-- Automatic threshold/interval changes affecting only future milestones
-- Prevention and auditing of attempts to alter the real registration count or configure a past milestone
-- Manual draws not changing automatic milestones
+- Exactly one draw for each festival date under concurrent requests
+- Registrations never triggering a draw
+- Prevention and auditing of attempts to alter the real registration count or rerun a completed day
 - Previous-winner exclusion
 - No replacement draw for unclaimed or rejected prizes
 - Permanent draw closure blocking registrations and all new draws without blocking claim processing or notification retries

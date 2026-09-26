@@ -1,6 +1,6 @@
 # Festival Lucky Draw
 
-A mobile-first lucky-draw application built with Next.js, Supabase, Cloudflare Turnstile, and Resend. It provides public registration, secure automatic and manual draws, winner notification, physical claim tracking, CSV export, and a protected single-admin dashboard.
+A mobile-first lucky-draw application built with Next.js, Supabase, Cloudflare Turnstile, and Resend. It provides public registration, two secure festival-day draws, a full-screen audience reveal, winner notification, physical claim tracking, CSV export, and a protected single-admin dashboard.
 
 ## Stack
 
@@ -23,7 +23,7 @@ The registration form uses a development-only Turnstile bypass when no Turnstile
 ## Supabase setup
 
 1. Create a Supabase project.
-2. Open the SQL Editor and run [`supabase/migrations/202609260001_initial_schema.sql`](supabase/migrations/202609260001_initial_schema.sql), or link the Supabase CLI and run `supabase db push`.
+2. Apply every SQL file in [`supabase/migrations`](supabase/migrations) in filename order, or link the Supabase CLI and run `supabase db push`.
 3. In Authentication, disable public user sign-ups.
 4. Enable TOTP MFA in the project’s Authentication settings, then create the one admin user manually with an email and password.
 5. Set `ADMIN_EMAIL` to that exact email address.
@@ -70,7 +70,7 @@ Only winners receive email. Draws write a notification-outbox record before deli
 - Add the organiser’s identity, contact information, final privacy retention period, and legally reviewed rules.
 - Set each day’s operational help-desk closing time.
 - Make a database export before the event and daily during the festival.
-- Test one registration, one manual draw, winner email delivery, claim updates, CSV export, pause/resume, and permanent closure in a staging event.
+- Test one registration, both daily draw slots, the audience reveal, winner email delivery, claim updates, CSV export, pause/resume, and permanent closure in a staging event.
 - Do not test permanent closure on the production event; it is intentionally irreversible through the application.
 
 ## Quality checks

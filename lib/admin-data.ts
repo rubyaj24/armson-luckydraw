@@ -87,6 +87,7 @@ export async function getDashboardData() {
       id: draw.id,
       kind: draw.kind,
       milestone: draw.milestone,
+      draw_day: draw.draw_day,
       eligible_count: draw.eligible_count,
       created_at: draw.created_at,
       participant: winner
@@ -109,6 +110,61 @@ export async function getDashboardData() {
     recentParticipants: (participantsResult.data ?? []).map(mapParticipant),
     draws: mappedDraws,
     auditLogs: auditResult.data ?? [],
+  };
+}
+
+export async function getDrawStageData() {
+  const supabase = createAdminSupabaseClient();
+  const { data: event, error: eventError } = await supabase
+    .from("events")
+    .select("id, name, starts_on, ends_on, draw_status")
+    .eq("slug", EVENT_SLUG)
+    .single();
+  if (eventError) throw eventError;
+
+  const [participantsResult, drawsResult] = await Promise.all([
+    supabase
+      .from("participants")
+      .select("lucky_draw_id")
+      .eq("event_id", event.id)
+      .eq("status", "eligible")
+      .order("registration_sequence", { ascending: false })
+      .limit(300),
+    supabase
+      .from("draws")
+      .select("id, draw_day, winner_participant_id")
+      .eq("event_id", event.id)
+      .not("draw_day", "is", null)
+      .order("draw_day", { ascending: true }),
+  ]);
+
+  if (participantsResult.error) throw participantsResult.error;
+  if (drawsResult.error) throw drawsResult.error;
+
+  const draws = drawsResult.data ?? [];
+  const winnerIds = draws.map((draw) => draw.winner_participant_id);
+  const { data: winners, error: winnersError } = winnerIds.length
+    ? await supabase
+        .from("participants")
+        .select("id, full_name, city, lucky_draw_id")
+        .in("id", winnerIds)
+    : { data: [], error: null };
+  if (winnersError) throw winnersError;
+
+  const winnerById = new Map((winners ?? []).map((winner) => [winner.id, winner]));
+  return {
+    event,
+    sampleIds: (participantsResult.data ?? []).map((participant) => participant.lucky_draw_id),
+    completedDraws: draws.map((draw) => {
+      const winner = winnerById.get(draw.winner_participant_id);
+      return {
+        drawId: draw.id,
+        drawDay: draw.draw_day as string,
+        name: winner?.full_name ?? "Winner",
+        city: winner?.city ?? "",
+        luckyDrawId: winner?.lucky_draw_id ?? "",
+      };
+    }),
   };
 }
 

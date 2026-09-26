@@ -12,12 +12,11 @@ function formatDate(value: string, includeTime = true) {
 
 export default async function AdminDashboard() {
   const { event, eligibleCount, recentParticipants, draws, auditLogs } = await getDashboardData();
-  const remaining = Math.max(0, event.next_auto_draw_at - event.valid_registration_count);
-  const previousTarget = Math.max(0, event.next_auto_draw_at - event.auto_draw_interval);
-  const progress = Math.min(100, Math.max(0,
-    ((event.valid_registration_count - previousTarget) / (event.next_auto_draw_at - previousTarget)) * 100,
-  ));
   const claimedCount = draws.filter((draw) => draw.claim?.status === "claimed").length;
+  const festivalDays = [
+    { date: "2026-10-03", label: "Day one", display: "October 3" },
+    { date: "2026-10-04", label: "Day two", display: "October 4" },
+  ];
 
   return (
     <>
@@ -33,17 +32,27 @@ export default async function AdminDashboard() {
             <small>Permanent verified count</small>
           </article>
           <article className="metric-card"><div className="metric-icon">◇</div><span>Eligible now</span><strong>{eligibleCount.toLocaleString("en-IN")}</strong><small>Previous winners excluded</small></article>
-          <article className="metric-card"><div className="metric-icon">✦</div><span>Draws completed</span><strong>{draws.length}</strong><small>{draws.filter((draw) => draw.kind === "manual").length} manual draws</small></article>
+          <article className="metric-card"><div className="metric-icon">✦</div><span>Draws completed</span><strong>{draws.filter((draw) => draw.draw_day).length}/2</strong><small>One finale on each festival day</small></article>
           <article className="metric-card"><div className="metric-icon">✓</div><span>Prizes claimed</span><strong>{claimedCount}</strong><small>{draws.length - claimedCount} awaiting or closed</small></article>
         </section>
 
         <section className="admin-card milestone-card">
           <div className="milestone-head">
-            <div><p className="section-kicker">Next automatic draw</p><h2>{remaining === 0 ? "Ready now" : `${remaining} more ${remaining === 1 ? "entry" : "entries"}`}</h2></div>
-            <div className="target-number"><span>Target</span><strong>{event.next_auto_draw_at}</strong></div>
+            <div><p className="section-kicker">Festival finales</p><h2>One winner at the end of each day</h2></div>
+            <div className="target-number"><span>Eligible pool</span><strong>{eligibleCount}</strong></div>
           </div>
-          <div className="progress-track"><div style={{ width: `${progress}%` }} /></div>
-          <div className="progress-labels"><span>{event.valid_registration_count} registered</span><span>Repeats every {event.auto_draw_interval}</span></div>
+          <div className="draw-day-grid">
+            {festivalDays.map((day) => {
+              const draw = draws.find((item) => item.draw_day === day.date);
+              return (
+                <div className={`draw-day-summary ${draw ? "complete" : "pending"}`} key={day.date}>
+                  <span>{day.label}</span>
+                  <strong>{day.display}</strong>
+                  <small>{draw ? `Winner: ${draw.participant?.lucky_draw_id ?? "selected"}` : "Awaiting end-of-day draw"}</small>
+                </div>
+              );
+            })}
+          </div>
           <EventActions event={event} eligibleCount={eligibleCount} />
         </section>
 
@@ -70,7 +79,7 @@ export default async function AdminDashboard() {
                   <div className="winner-medal">✦</div>
                   <div className="winner-info">
                     <div className="winner-title"><strong>{draw.participant?.name ?? "Unknown winner"}</strong><span className={`status-pill ${draw.claim?.status}`}>{draw.claim?.status ?? "pending"}</span></div>
-                    <p>{draw.participant?.lucky_draw_id} · {draw.kind === "automatic" ? `Milestone ${draw.milestone}` : "Manual draw"}</p>
+                    <p>{draw.participant?.lucky_draw_id} · {draw.draw_day ? `Festival day ${draw.draw_day === "2026-10-03" ? "one" : "two"}` : "Legacy draw"}</p>
                     <small>{formatDate(draw.created_at)} · Email {draw.notification?.status ?? "pending"}</small>
                     <WinnerActions draw={draw} />
                   </div>

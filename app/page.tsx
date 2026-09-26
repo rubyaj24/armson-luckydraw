@@ -36,11 +36,18 @@ export default async function Home() {
         <div className="brand-lockup">
           <div className="presentation-lockup" aria-label="Armson Homes presents CETalks">
             <span className="partner-logo partner-logo-armson">
-              <Image src="/assets/Armson logo.png" alt="Armson Homes" width={72} height={69} />
+              <Image src="/assets/Armson logo.png" alt="Armson Homes" width={88} height={88} priority />
             </span>
-            <span className="presents-copy">Presents</span>
-            <span className="partner-logo partner-logo-cetalks">
-              <Image src="/assets/cetalks logo.png" alt="CETalks" width={54} height={52} />
+            <span className="presenter-copy">
+              <small>Event presented by</small>
+              <strong>Armson Homes</strong>
+              <em>Since 1998</em>
+            </span>
+            <span className="co-presenter">
+              <small>With</small>
+              <span className="partner-logo partner-logo-cetalks">
+                <Image src="/assets/cetalks logo.png" alt="CETalks" width={54} height={52} />
+              </span>
             </span>
           </div>
           <Image
@@ -57,16 +64,15 @@ export default async function Home() {
           <p className="eyebrow"><span /> October 3—4 · CET <span /></p>
           <p className="draw-title-shadow" aria-hidden="true">Lucky<br />draw</p>
           <h1>Lucky<br />draw</h1>
-          <span className="draw-sticker">18+</span>
         </div>
         <p className="hero-copy">
-          Your one-minute entry stays in every upcoming draw until you win.
-          Save your lucky ID and keep the festival magic close.
+          Your one-minute entry stays eligible for both festival-day finales until you win.
+          Save your lucky ID and watch the main-stage reveal.
         </p>
 
         <div className="draw-facts" aria-label="Lucky draw highlights">
           <div><strong>01</strong><span>Winner per draw</span></div>
-          <div><strong>100</strong><span>Entries per draw</span></div>
+          <div><strong>ALL</strong><span>Eligible entries</span></div>
           <div><strong>2</strong><span>Festival days</span></div>
         </div>
 

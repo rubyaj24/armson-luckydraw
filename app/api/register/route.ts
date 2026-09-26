@@ -1,8 +1,7 @@
-import { after, NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { apiError } from "@/lib/api";
 import { EVENT_SLUG } from "@/lib/config";
-import { dispatchDrawNotification } from "@/lib/email";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { verifyTurnstile } from "@/lib/turnstile";
 import type { RegistrationResult } from "@/lib/types";
@@ -61,17 +60,6 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     const result = (data?.[0] ?? null) as RegistrationResult | null;
     if (!result) throw new Error("Registration did not return a result.");
-
-    if (result.draw_triggered && result.draw_id) {
-      const drawId = result.draw_id;
-      after(async () => {
-        try {
-          await dispatchDrawNotification(drawId);
-        } catch (error) {
-          console.error("Winner notification failed", error);
-        }
-      });
-    }
 
     return NextResponse.json({
       luckyDrawId: result.lucky_draw_id,

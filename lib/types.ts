@@ -41,6 +41,7 @@ export type DrawRecord = {
   id: string;
   kind: "automatic" | "manual";
   milestone: number | null;
+  draw_day: string | null;
   eligible_count: number;
   created_at: string;
   participant: Pick<
@@ -57,4 +58,12 @@ export type DrawRecord = {
     attempts: number;
     last_error: string | null;
   } | null;
+};
+
+export type DrawStageWinner = {
+  drawId: string;
+  drawDay: string;
+  name: string;
+  city: string;
+  luckyDrawId: string;
 };

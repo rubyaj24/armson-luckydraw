@@ -7,6 +7,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 const links = [
   { href: "/admin", label: "Overview", icon: "◫" },
   { href: "/admin/participants", label: "Participants", icon: "◎" },
+  { href: "/admin/stage", label: "Draw stage", icon: "✦" },
 ];
 
 export function AdminShell({ children, email }: { children: React.ReactNode; email: string }) {
