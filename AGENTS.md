@@ -4,7 +4,7 @@
 
 Build a mobile-first lucky-draw application for an Indian festival. The application is primarily used to collect participant data through a QR-linked registration form and to conduct auditable lucky draws.
 
-The festival runs on October 2, 3, and 4, 2026. Use `Asia/Kolkata` for all event dates, draw timestamps, and claim deadlines.
+The festival runs on October 3 and 4, 2026. Use `Asia/Kolkata` for all event dates, draw timestamps, and claim deadlines.
 
 ## Technical direction
 

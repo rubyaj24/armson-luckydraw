@@ -697,9 +697,9 @@ insert into public.events (
   registration_status, draw_status, next_auto_draw_at, auto_draw_interval
 ) values (
   'armson-festival-2026',
-  'Festival Lucky Draw 2026',
+  'Armson Homes presents CETalks Spotlight 2026',
   'ARM',
-  date '2026-10-02',
+  date '2026-10-03',
   date '2026-10-04',
   'Asia/Kolkata',
   'open',

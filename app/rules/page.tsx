@@ -5,7 +5,7 @@ export default function RulesPage() {
     <main className="legal-shell">
       <Link href="/" className="back-link">← Back to registration</Link>
       <div className="legal-card">
-        <p className="panel-kicker">Festival 2026</p>
+        <p className="panel-kicker">Armson Homes presents CETalks Spotlight 2026</p>
         <h1>Lucky-draw rules</h1>
         <p>These rules should be reviewed by the event organiser’s legal adviser before launch.</p>
         <ol>
