@@ -183,6 +183,9 @@ a { color: inherit; }
 .consent-row input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--plum); flex: 0 0 auto; }
 .consent-row a { color: var(--plum); font-weight: 700; }
 .turnstile-wrap { margin: 5px 0 14px; min-height: 1px; }
+.turnstile-error { display: grid; gap: 7px; margin: -5px 0 14px; padding: 10px 12px; color: var(--danger); background: #fff0ee; border: 1px solid #efb8b2; border-radius: 5px; font-size: 10px; line-height: 1.45; }
+.turnstile-error button { justify-self: start; padding: 0; color: var(--berry); background: transparent; border: 0; border-bottom: 1px solid currentColor; font-size: 9px; font-weight: 900; cursor: pointer; }
+@media (max-width: 380px) { .turnstile-wrap { display: grid; justify-content: center; } }
 .primary-button {
   width: 100%;
   border: 0;

@@ -59,7 +59,7 @@ export function RegistrationForm({ closed, paused }: { closed: boolean; paused: 
     return (
       <div className="success-card" role="status">
         <div className="success-icon">✓</div>
-        <p className="panel-kicker">{success.existing ? "Already registered" : "Entry confirmed"}</p>
+        {success.existing && <p className="panel-kicker">Already registered</p>}
         <h3>Your lucky-draw ID</h3>
         <button
           className="lucky-id"
@@ -71,7 +71,6 @@ export function RegistrationForm({ closed, paused }: { closed: boolean; paused: 
           <small>Tap to copy</small>
         </button>
         <p>Save or screenshot this ID. We will email you if it is selected.</p>
-        <div className="sequence-note">Confirmed entry #{success.sequence}</div>
       </div>
     );
   }

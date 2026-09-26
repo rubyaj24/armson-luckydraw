@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     const verification = await verifyTurnstile(body.turnstileToken, remoteIp);
 
     if (!verification.success) {
+      console.warn("Turnstile verification failed", verification["error-codes"] ?? []);
       return NextResponse.json(
         { error: "Security verification failed. Please try again." },
         { status: 400 },
