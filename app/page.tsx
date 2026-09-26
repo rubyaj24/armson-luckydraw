@@ -76,6 +76,7 @@ export default async function Home() {
           alt=""
           width={540}
           height={720}
+          loading="eager"
           aria-hidden="true"
         />
       </section>
