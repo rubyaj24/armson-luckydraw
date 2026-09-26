@@ -72,6 +72,7 @@ Registration insertion, permanent sequence assignment, milestone detection, and 
 - Queue or record the winner notification as part of the draw result, then send it from trusted Next.js server code using Resend.
 - Email failure must not roll back a valid registration or draw.
 - Store notification status and allow the administrator to retry failed winner emails.
+- Do not schedule automatic notification retries. Failed winner emails are retried explicitly by the administrator from the dashboard.
 - The winner may claim the prize at the festival help desk until the configured help-desk closing time on the same calendar day as the draw.
 - Help-desk closing times are configuration values and will be supplied later.
 - Staff verify the lucky-draw ID, submitted phone number, age, and government-issued identity document in person.

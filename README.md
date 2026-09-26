@@ -8,7 +8,7 @@ A mobile-first lucky-draw application built with Next.js, Supabase, Cloudflare T
 - Supabase Postgres and Auth
 - Cloudflare Turnstile
 - Resend transactional email
-- Vercel hosting and cron retry
+- Vercel hosting
 
 ## Local development
 
@@ -55,16 +55,15 @@ Every submission is verified server-side. The app also uses a honeypot, minimum 
 2. Create a sending-only API key restricted to that domain.
 3. Set `RESEND_API_KEY`, `WINNER_FROM_EMAIL`, and optionally `WINNER_REPLY_TO`.
 
-Only winners receive email. Draws write a notification-outbox record before delivery is attempted. Failed messages can be retried from the dashboard or by the Vercel cron route.
+Only winners receive email. Draws write a notification-outbox record before delivery is attempted. Failed messages remain visible and can be retried explicitly by the administrator from the dashboard.
 
 ## Vercel deployment
 
 1. Import the repository into a Vercel Pro project.
 2. Add all variables from [`.env.example`](.env.example) to the Production environment.
-3. Generate a long random `CRON_SECRET`; Vercel uses it to authenticate `/api/cron/notifications`.
-4. Add the final custom domain to the Turnstile widget.
-5. Deploy, sign in at `/admin/login`, and complete TOTP enrolment.
-6. Replace the placeholder branding through `public/assets` and update the public text before launch.
+3. Add the final custom domain to the Turnstile widget.
+4. Deploy, sign in at `/admin/login`, and complete TOTP enrolment.
+5. Replace the placeholder branding through `public/assets` and update the public text before launch.
 
 ## Required pre-launch checks
 

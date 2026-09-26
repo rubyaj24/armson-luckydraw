@@ -101,23 +101,3 @@ export async function dispatchDrawNotification(drawId: string) {
     })
     .eq("id", outbox.id);
 }
-
-export async function retryPendingNotifications(limit = 20) {
-  const supabase = createAdminSupabaseClient();
-  const { data } = await supabase
-    .from("notification_outbox")
-    .select("draw_id")
-    .in("status", ["pending", "failed"])
-    .lt("attempts", 5)
-    .order("created_at", { ascending: true })
-    .limit(limit);
-
-  const results = await Promise.allSettled(
-    (data ?? []).map((item) => dispatchDrawNotification(item.draw_id)),
-  );
-
-  return {
-    processed: results.length,
-    failed: results.filter((result) => result.status === "rejected").length,
-  };
-}
