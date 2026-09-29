@@ -21,7 +21,6 @@ export default function HomeCheckupPage() {
           </Link>
           <div className="checkup-brand-copy"><strong>Armson Homes</strong><span>We build heavenly · Since 1998</span></div>
           <a className="checkup-header-contact" href="tel:+918111993111"><span>Speak with our team</span><strong>+91 8111 993 111</strong></a>
-          <Link className="checkup-back" href="/">Back to festival</Link>
         </header>
       </div>
 
