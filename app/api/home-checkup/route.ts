@@ -49,9 +49,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.from("home_checkup_surveys").insert({
       full_name: body.name,
       age: body.age,
-      study_year: body.studyYear,
       address: body.address,
-      department: body.department,
       home_ownership: body.homeOwnership,
       years_in_home: body.yearsInHome,
       needs_checkup: body.needsCheckup,

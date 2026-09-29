@@ -27,9 +27,7 @@ export const registrationSchema = z.object({
 export const homeCheckupSchema = z.object({
   name: z.string().trim().min(2).max(100),
   age: z.coerce.number().int().min(18).max(120),
-  studyYear: z.string().trim().min(1).max(40),
   address: z.string().trim().min(5).max(500),
-  department: z.string().trim().min(2).max(100),
   homeOwnership: z.enum(["owned", "rented"]),
   yearsInHome: z.coerce.number().min(0).max(120),
   needsCheckup: z.boolean(),

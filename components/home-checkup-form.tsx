@@ -28,9 +28,7 @@ export function HomeCheckupForm() {
         body: JSON.stringify({
           name: form.get("name"),
           age: form.get("age"),
-          studyYear: form.get("studyYear"),
           address: form.get("address"),
-          department: form.get("department"),
           homeOwnership: form.get("homeOwnership"),
           yearsInHome: form.get("yearsInHome"),
           needsCheckup: form.get("needsCheckup") === "yes",
@@ -75,8 +73,6 @@ export function HomeCheckupForm() {
       <div className="checkup-fields">
         <div className="field"><label htmlFor="checkup-name">Name</label><input id="checkup-name" name="name" autoComplete="name" minLength={2} maxLength={100} required /></div>
         <div className="field"><label htmlFor="checkup-age">Age</label><input id="checkup-age" name="age" type="number" inputMode="numeric" min={18} max={120} required /></div>
-        <div className="field"><label htmlFor="checkup-year">Year of study</label><select id="checkup-year" name="studyYear" defaultValue="" required><option value="" disabled>Select year</option><option>First year</option><option>Second year</option><option>Third year</option><option>Fourth year</option><option>Other</option></select></div>
-        <div className="field"><label htmlFor="checkup-department">Department</label><input id="checkup-department" name="department" maxLength={100} required /></div>
         <div className="field full-field"><label htmlFor="checkup-address">Home address</label><textarea id="checkup-address" name="address" autoComplete="street-address" rows={3} minLength={5} maxLength={500} required /></div>
         <div className="field"><label htmlFor="home-ownership">Home is</label><select id="home-ownership" name="homeOwnership" defaultValue="" required><option value="" disabled>Select one</option><option value="owned">Owned</option><option value="rented">Rented</option></select></div>
         <div className="field"><label htmlFor="years-in-home">How long have you lived there?</label><div className="checkup-years"><input id="years-in-home" name="yearsInHome" type="number" min="0" max="120" step="0.5" required /><span>years</span></div></div>
