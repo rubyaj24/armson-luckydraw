@@ -3,6 +3,7 @@ import Link from "next/link";
 import { RegistrationForm } from "@/components/registration-form";
 import { EVENT_SLUG, hasServerSupabaseConfig } from "@/lib/config";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { PublicEventGate } from "@/components/public-event-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,7 @@ export default async function Home() {
   const state = await eventState();
 
   return (
+    <PublicEventGate>
     <main className="public-shell">
       <div className="public-atmosphere" aria-hidden="true" />
       <div className="public-color-rail public-color-rail-left" aria-hidden="true" />
@@ -96,6 +98,8 @@ export default async function Home() {
           <p className="panel-intro">Fill in your details. If your ID wins, we&apos;ll email you.</p>
           <RegistrationForm closed={state.closed} paused={state.paused} />
           <footer className="public-footer">
+            <Link href="/home-checkup">Home checkup</Link>
+            <span>✦</span>
             <Link href="/rules">Draw rules</Link>
             <span>✦</span>
             <Link href="/privacy">Privacy notice</Link>
@@ -103,5 +107,6 @@ export default async function Home() {
         </div>
       </section>
     </main>
+    </PublicEventGate>
   );
 }

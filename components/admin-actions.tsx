@@ -40,7 +40,8 @@ export function EventActions({ event, eligibleCount }: { event: EventRecord; eli
 
   async function toggleRegistration() {
     const target = event.registration_status === "open" ? "paused" : "open";
-    const reason = prompt(`Reason to set registration to ${target}:`);
+    const action = target === "open" ? "activate the festival" : "deactivate the festival";
+    const reason = prompt(`Reason to ${action}:`);
     if (!reason) return;
     await execute("Registration update", () =>
       post("/api/admin/registration-status", { status: target, reason }),
@@ -51,7 +52,7 @@ export function EventActions({ event, eligibleCount }: { event: EventRecord; eli
     <>
       <div className="action-row">
         <Link className="admin-button primary" href="/admin/stage">✦ Open audience draw stage</Link>
-        <button className="admin-button" onClick={toggleRegistration} disabled={Boolean(busy) || event.draw_status === "closed"}>{event.registration_status === "open" ? "Ⅱ Pause entries" : "▶ Resume entries"}</button>
+        <button className="admin-button" onClick={toggleRegistration} disabled={Boolean(busy) || event.draw_status === "closed"}>{event.registration_status === "open" ? "Ⅱ Deactivate festival" : "▶ Activate festival"}</button>
         <button className="admin-button danger" onClick={() => setShowClose(true)} disabled={Boolean(busy) || event.draw_status === "closed"}>Close lucky draw</button>
       </div>
       {notice && <div className="admin-notice">{notice}</div>}

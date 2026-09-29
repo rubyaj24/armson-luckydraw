@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { PublicEventGate } from "@/components/public-event-gate";
+
+export const dynamic = "force-dynamic";
 
 export default function RulesPage() {
   return (
+    <PublicEventGate>
     <main className="legal-shell">
       <Link href="/" className="back-link">← Back to registration</Link>
       <div className="legal-card">
@@ -21,5 +25,6 @@ export default function RulesPage() {
         </ol>
       </div>
     </main>
+    </PublicEventGate>
   );
 }

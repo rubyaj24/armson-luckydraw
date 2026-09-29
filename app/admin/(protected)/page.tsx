@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
     <>
       <header className="admin-topbar">
         <div><p>October 3—4, 2026</p><h1>Good to see you.</h1></div>
-        <div className={`event-state ${event.draw_status === "closed" ? "closed" : event.registration_status}`}><span />{event.draw_status === "closed" ? "Draw closed" : `Registration ${event.registration_status}`}</div>
+        <div className={`event-state ${event.draw_status === "closed" ? "closed" : event.registration_status}`}><span />{event.draw_status === "closed" ? "Festival closed" : event.registration_status === "open" ? "Festival active" : "Festival inactive"}</div>
       </header>
 
       <main className="admin-content">

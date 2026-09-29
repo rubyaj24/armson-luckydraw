@@ -24,6 +24,21 @@ export const registrationSchema = z.object({
   startedAt: z.coerce.number().int().positive(),
 });
 
+export const homeCheckupSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  age: z.coerce.number().int().min(18).max(120),
+  studyYear: z.string().trim().min(1).max(40),
+  address: z.string().trim().min(5).max(500),
+  department: z.string().trim().min(2).max(100),
+  homeOwnership: z.enum(["owned", "rented"]),
+  yearsInHome: z.coerce.number().min(0).max(120),
+  needsCheckup: z.boolean(),
+  consent: z.literal(true, { error: "Consent is required" }),
+  turnstileToken: z.string().min(1),
+  website: z.string().max(0).optional().default(""),
+  startedAt: z.coerce.number().int().positive(),
+});
+
 export const reasonSchema = z.object({
   reason: z.string().trim().min(5, "Please provide a short reason").max(500),
 });
