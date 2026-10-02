@@ -27,6 +27,10 @@ export const registrationSchema = z.object({
 export const homeCheckupSchema = z.object({
   name: z.string().trim().min(2).max(100),
   age: z.coerce.number().int().min(18).max(120),
+  phone: z
+    .string()
+    .transform(normalizeIndianPhone)
+    .pipe(z.string().regex(/^\+91[6-9]\d{9}$/, "Enter a valid Indian mobile number")),
   address: z.string().trim().min(5).max(500),
   homeOwnership: z.enum(["owned", "rented"]),
   yearsInHome: z.coerce.number().min(0).max(120),

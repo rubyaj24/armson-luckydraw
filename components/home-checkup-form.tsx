@@ -28,6 +28,7 @@ export function HomeCheckupForm() {
         body: JSON.stringify({
           name: form.get("name"),
           age: form.get("age"),
+          phone: form.get("phone"),
           address: form.get("address"),
           homeOwnership: form.get("homeOwnership"),
           yearsInHome: form.get("yearsInHome"),
@@ -73,6 +74,7 @@ export function HomeCheckupForm() {
       <div className="checkup-fields">
         <div className="field"><label htmlFor="checkup-name">Name</label><input id="checkup-name" name="name" autoComplete="name" minLength={2} maxLength={100} required /></div>
         <div className="field"><label htmlFor="checkup-age">Age</label><input id="checkup-age" name="age" type="number" inputMode="numeric" min={18} max={120} required /></div>
+        <div className="field"><label htmlFor="checkup-phone">Mobile number</label><input id="checkup-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+91 98765 43210" maxLength={16} required /></div>
         <div className="field full-field"><label htmlFor="checkup-address">Home address</label><textarea id="checkup-address" name="address" autoComplete="street-address" rows={3} minLength={5} maxLength={500} required /></div>
         <div className="field"><label htmlFor="home-ownership">Home is</label><select id="home-ownership" name="homeOwnership" defaultValue="" required><option value="" disabled>Select one</option><option value="owned">Owned</option><option value="rented">Rented</option></select></div>
         <div className="field"><label htmlFor="years-in-home">How long have you lived there?</label><div className="checkup-years"><input id="years-in-home" name="yearsInHome" type="number" min="0" max="120" step="0.5" required /><span>years</span></div></div>
@@ -85,7 +87,7 @@ export function HomeCheckupForm() {
       </fieldset>
 
       <div className="honeypot" aria-hidden="true"><label htmlFor="checkup-website">Website</label><input id="checkup-website" name="website" tabIndex={-1} autoComplete="off" /></div>
-      <label className="consent-row checkup-consent"><input name="consent" type="checkbox" required /><span>I agree that event organisers may store these details to review home checkup interest. They will not share my address with Armson Homes automatically.</span></label>
+      <label className="consent-row checkup-consent"><input name="consent" type="checkbox" required /><span>I agree that event organisers may store these details and use my phone number to follow up about this survey. My details will not be sent to Armson Homes automatically.</span></label>
       <TurnstileWidget onToken={onToken} />
       {error && <p className="form-error" role="alert">{error}</p>}
       <button className="primary-button checkup-submit" disabled={pending || !token} type="submit"><span>{pending ? "Submitting…" : "Submit home survey"}</span><b aria-hidden="true">→</b></button>
