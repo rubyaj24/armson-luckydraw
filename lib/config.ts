@@ -15,6 +15,12 @@ export function hasServerSupabaseConfig() {
 }
 
 export function isConfiguredAdmin(email: string | undefined | null) {
-  const configured = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  return Boolean(configured && email?.trim().toLowerCase() === configured);
+  if (!email?.trim()) return false;
+
+  const configured = [process.env.ADMIN_EMAILS, process.env.ADMIN_EMAIL]
+    .flatMap((value) => value?.split(",") ?? [])
+    .map((address) => address.trim().toLowerCase())
+    .filter(Boolean);
+
+  return configured.includes(email.trim().toLowerCase());
 }
